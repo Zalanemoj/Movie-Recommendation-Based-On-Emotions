@@ -22,16 +22,10 @@
 ## 📸 Screenshots
 
 | Emotion-Based-Movie Prediction | Movie Recommendations |
-| :---: | :---: |
-| ![Emotion-Based-Movie Prediction](<img width="1118" height="1004" alt="Screenshot 2026-01-07 185954" src="https://github.com/user-attachments/assets/1fd4952a-da8e-4e27-a059-290cc1a500a9" />
-<img width="1846" height="1363" alt="Screenshot 2026-01-07 182326" src="https://github.com/user-attachments/assets/6b777c67-6f18-4df4-83e5-fa1ba1e4cd27" />
-) | ![Similar Movies](<img width="1126" height="587" alt="Screenshot 2026-01-07 190043" src="https://github.com/user-attachments/assets/edeba59a-346a-48cc-a255-1b33558bd981" />
-<img width="1846" height="1363" alt="Screenshot 2026-01-07 182326" src="https://github.com/user-attachments/assets/b57fc120-d2cc-46e3-b53b-256c4650d34f" />
-) |
-
----
-
-## 🛠️ Project Structure
+<img width="1126" height="587" alt="Screenshot 2026-01-07 190043" src="https://github.com/user-attachments/assets/866d20d3-b421-4df4-86e1-89c5e94f9618" />
+<img width="1118" height="1004" alt="Screenshot 2026-01-07 185954" src="https://github.com/user-attachments/assets/329e1276-0482-4ab7-a430-a8ba679d85ba" />
+## 🛠️ 
+Project Structure
 
 The repository is organized for clear development and easy deployment:
 * `app.py`: The main Streamlit dashboard.
