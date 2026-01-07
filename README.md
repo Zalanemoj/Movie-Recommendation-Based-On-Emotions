@@ -50,25 +50,25 @@ The repository is organized for clear development and easy deployment:
 * `scripts/`: Original notebooks used for model training and testing.
 
 Movie-Recommendation-Based-On-Emotions/
-├── .idea/                          # IDE configuration files
-│   ├── inspectionProfiles/         # Code inspection settings
+├── .idea/                         
+│   ├── inspectionProfiles/        
 │   ├── Emotion-Based-Movie-Recomender.iml
 │   ├── modules.xml
 │   └── ...
-├── Images/                         # Project screenshots and confusion matrices
+├── Images/                        
 │   ├── Confusion-metrics-withClassWeights.png
 │   ├── Confusion-metrics-withoutClassWeights.png
 │   └── ... (sample movie posters/images)
-├── Model-Files/                    # Pre-trained models and data files
-│   ├── best_model.keras            # Trained emotion detection model
-│   ├── movie_dict.pkl              # Pickled movie dictionary for recommendations
-│   └── similarity_matrix.pkl       # Pre-computed similarity scores
-├── scripts/                        # Jupyter notebooks and testing scripts
+├── Model-Files/                    
+│   ├── best_model.keras           
+│   ├── movie_dict.pkl             
+│   └── similarity_matrix.pkl      
+├── scripts/                        
 │   ├── content-based-movie-recomender.ipynb
 │   ├── face-emotion-detection.ipynb
-│   └── test_recommend.py           # Script for testing recommendation logic
-├── app.py                          # Main Streamlit/Flask application file
-├── requirements.txt                # Project dependencies
-├── LICENSE                         # Project license
-├── .gitignore                      # Files to exclude from Git
-└── README.md                       # Project documentation
+│   └── test_recommend.py
+├── app.py                     
+├── requirements.txt              
+├── LICENSE                  
+├── .gitignore                 
+└── README.md                 
