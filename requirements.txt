@@ -4,4 +4,5 @@ pandas
 numpy
 sentence-transformers
 streamlit
-google-generativeai
+groq
+requests
