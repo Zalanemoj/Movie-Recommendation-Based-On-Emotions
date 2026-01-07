@@ -48,3 +48,27 @@ git clone [https://github.com/Zalanemoj/Movie-Recommendation-Based-On-Emotions.g
 
 # Install dependencies
 pip install -r requirements.txt
+
+Movie-Recommendation-Based-On-Emotions/
+├── .idea/                          # IDE configuration files
+│   ├── inspectionProfiles/         # Code inspection settings
+│   ├── Emotion-Based-Movie-Recomender.iml
+│   ├── modules.xml
+│   └── ...
+├── Images/                         # Project screenshots and confusion matrices
+│   ├── Confusion-metrics-withClassWeights.png
+│   ├── Confusion-metrics-withoutClassWeights.png
+│   └── ... (sample movie posters/images)
+├── Model-Files/                    # Pre-trained models and data files
+│   ├── best_model.keras            # Trained emotion detection model
+│   ├── movie_dict.pkl              # Pickled movie dictionary for recommendations
+│   └── similarity_matrix.pkl       # Pre-computed similarity scores
+├── scripts/                        # Jupyter notebooks and testing scripts
+│   ├── content-based-movie-recomender.ipynb
+│   ├── face-emotion-detection.ipynb
+│   └── test_recommend.py           # Script for testing recommendation logic
+├── app.py                          # Main Streamlit/Flask application file
+├── requirements.txt                # Project dependencies
+├── LICENSE                         # Project license
+├── .gitignore                      # Files to exclude from Git
+└── README.md                       # Project documentation
