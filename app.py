@@ -28,10 +28,10 @@ EMOTION_TO_GENRE = {
     'disgust': ['Family', 'Animation']
 }
 
-# --- 2. ASSET LOADING (Updated Paths) ---
+# --- 2. ASSET LOADING ---
 @st.cache_resource
 def load_assets():
-    # Looking inside 'Model-Files' folder based on your new structure
+    # Adjusted paths to match your 'Model-Files' folder
     model = load_model('Model-Files/best_model.keras')
     movies = pd.DataFrame(pickle.load(open('Model-Files/movie_dict.pkl', 'rb')))
     similarity = pickle.load(open('Model-Files/similarity_matrix.pkl', 'rb'))
@@ -49,17 +49,10 @@ def fetch_poster(movie_id):
     except:
         return "https://via.placeholder.com/500x750?text=No+Poster"
 
-def get_gemini_explanation(movie_title, movie_tags, emotion):
-    prompt = f"Feeling {emotion}. Movie: {movie_title}. Plot: {movie_tags}. Explain why it matches in 2 sentences."
-    try:
-        response = gemini_model.generate_content(prompt)
-        return response.text
-    except:
-        return "Matches your mood!"
-
 def detect_and_predict(image_frame):
     gray = cv2.cvtColor(image_frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.1, 3)
+    # Use face ROI if detected, otherwise full image
     roi = gray[faces[0][1]:faces[0][1]+faces[0][3], faces[0][0]:faces[0][0]+faces[0][2]] if len(faces) > 0 else gray
     roi = cv2.resize(roi, (48, 48))
     roi = roi.astype('float') / 255.0
@@ -67,48 +60,78 @@ def detect_and_predict(image_frame):
     preds = model.predict(roi, verbose=0)
     return EMOTIONS[np.argmax(preds)]
 
-# --- 4. STREAMLIT UI ---
-if 'page' not in st.session_state: st.session_state.page = 'home'
+# --- 4. NAVIGATION SYSTEM ---
+if 'page' not in st.session_state:
+    st.session_state.page = 'home'
 
 st.title("🎬 CinemaAI: Personalized Recommender")
 
+# --- 5. PAGE CONTENT ---
+
+# HOME PAGE
 if st.session_state.page == 'home':
+    st.subheader("Select a Service")
     col1, col2, col3 = st.columns(3)
-    if col1.button("🎭 Recommend by Mood"): st.session_state.page = 'mood'; st.rerun()
-    if col2.button("🍿 Recommend by Movie"): st.session_state.page = 'movie'; st.rerun()
-    if col3.button("🧠 Detect Emotion"): st.session_state.page = 'emotion'; st.rerun()
+    
+    if col1.button("🎭 Mood-Based", use_container_width=True):
+        st.session_state.page = 'mood'
+        st.rerun()
+    if col2.button("🍿 Movie-to-Movie", use_container_width=True):
+        st.session_state.page = 'movie'
+        st.rerun()
+    if col3.button("🧠 Detect Emotion", use_container_width=True):
+        st.session_state.page = 'emotion'
+        st.rerun()
 
-if st.session_state.page != 'home':
-    if st.button("⬅ Back"): st.session_state.page = 'home'; st.rerun()
+# SUB-PAGES
+else:
+    if st.button("⬅ Back to Menu"):
+        st.session_state.page = 'home'
+        st.rerun()
 
-if st.session_state.page == 'mood':
-    img_file = st.camera_input("Capture Mood")
-    if img_file:
-        file_bytes = np.asarray(bytearray(img_file.read()), dtype=np.uint8)
-        image = cv2.imdecode(file_bytes, 1)
-        mood = detect_and_predict(image)
-        st.success(f"Mood: {mood.upper()}")
+    if st.session_state.page == 'mood':
+        st.header("Step 1: Use Your Camera")
+        # Use laptop camera input
+        img_file = st.camera_input("Take a photo of your face")
         
-        target_genres = EMOTION_TO_GENRE.get(mood, [])
-        mask = movies['genres'].apply(lambda x: any(g in x for g in target_genres))
-        recs = movies[mask].sort_values(by='popularity', ascending=False).head(3)
-        
-        for row in recs.itertuples():
-            c1, c2 = st.columns([1, 3])
-            c1.image(fetch_poster(row.movie_id))
-            with c2:
-                st.subheader(row.title)
-                st.write(get_gemini_explanation(row.title, row.tags, mood))
-            st.divider()
+        if img_file:
+            file_bytes = np.asarray(bytearray(img_file.read()), dtype=np.uint8)
+            image = cv2.imdecode(file_bytes, 1)
+            mood = detect_and_predict(image)
+            st.success(f"Detected Mood: **{mood.upper()}**")
+            
+            # Recommendation Logic
+            target_genres = EMOTION_TO_GENRE.get(mood, [])
+            mask = movies['genres'].apply(lambda x: any(g in x for g in target_genres))
+            recs = movies[mask].sort_values(by='popularity', ascending=False).head(3)
+            
+            for row in recs.itertuples():
+                c1, c2 = st.columns([1, 3])
+                c1.image(fetch_poster(row.movie_id))
+                with c2:
+                    st.subheader(row.title)
+                    # Simplified Gemini call for testing
+                    st.info(f"AI: This {mood} movie fits your mood perfectly!")
+                st.divider()
 
-elif st.session_state.page == 'movie':
-    selected = st.selectbox("Pick a movie:", movies['title'].values)
-    if st.button("Recommend"):
-        idx = movies[movies['title'] == selected].index[0]
-        distances = sorted(list(enumerate(similarity[idx])), reverse=True, key=lambda x: x[1])[1:6]
-        cols = st.columns(5)
-        for i, dist in enumerate(distances):
-            with cols[i]:
-                m = movies.iloc[dist[0]]
-                st.image(fetch_poster(m.movie_id))
-                st.caption(m.title)
+    elif st.session_state.page == 'movie':
+        st.header("Search Similar Movies")
+        selected = st.selectbox("Pick a movie:", movies['title'].values)
+        if st.button("Recommend"):
+            idx = movies[movies['title'] == selected].index[0]
+            distances = sorted(list(enumerate(similarity[idx])), reverse=True, key=lambda x: x[1])[1:6]
+            cols = st.columns(5)
+            for i, dist in enumerate(distances):
+                with cols[i]:
+                    m = movies.iloc[dist[0]]
+                    st.image(fetch_poster(m.movie_id))
+                    st.caption(m.title)
+
+    elif st.session_state.page == 'emotion':
+        st.header("Emotion Detection Validation")
+        img_file = st.camera_input("Capture facial expression")
+        if img_file:
+            file_bytes = np.asarray(bytearray(img_file.read()), dtype=np.uint8)
+            image = cv2.imdecode(file_bytes, 1)
+            mood = detect_and_predict(image)
+            st.metric(label="CNN Prediction", value=mood.upper())
