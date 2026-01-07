@@ -34,14 +34,14 @@ Ensure you have Python installed and get your API keys from:
 * [TMDB API](https://www.themoviedb.org/documentation/api)
 
 ### 2. Installation
-```bash
+bash
 # Clone the repository
 git clone [https://github.com/Zalanemoj/Movie-Recommendation-Based-On-Emotions.git](https://github.com/Zalanemoj/Movie-Recommendation-Based-On-Emotions.git)
 
 # Install dependencies
 pip install -r requirements.txt
 
-## 🛠️ 
+### 3. 🛠️ 
 Project Structure
 The repository is organized for clear development and easy deployment:
 * `app.py`: The main Streamlit dashboard.
