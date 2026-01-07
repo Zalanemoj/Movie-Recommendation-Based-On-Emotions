@@ -8,8 +8,8 @@ from groq import Groq
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 
-TMDB_API_KEY = "6e6405f20790c821fd18d3fb0ab9df27"
-GROQ_API_KEY = "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" 
+TMDB_API_KEY = ""
+GROQ_API_KEY = "" 
 
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -124,3 +124,4 @@ else:
             image = cv2.imdecode(file_bytes, 1)
             mood = detect_and_predict(image)
             st.metric(label="CNN Model Prediction", value=mood.upper())
+
