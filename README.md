@@ -21,10 +21,13 @@
 
 ## 📸 Screenshots
 
-| Mood Detection | Movie Recommendations |
+| Emotion-Based-Movie Prediction | Movie Recommendations |
 | :---: | :---: |
-| ![Emotion Prediction](./Images/Confusion-metrics-withClassWeights.png) | ![Similar Movies](./Images/Confusion-metrics-withoutClassWeights.png) |
-*Note: You can replace these placeholders with your actual app screenshots found in the `/Images` folder.*
+| ![Emotion-Based-Movie Prediction](<img width="1118" height="1004" alt="Screenshot 2026-01-07 185954" src="https://github.com/user-attachments/assets/1fd4952a-da8e-4e27-a059-290cc1a500a9" />
+<img width="1846" height="1363" alt="Screenshot 2026-01-07 182326" src="https://github.com/user-attachments/assets/6b777c67-6f18-4df4-83e5-fa1ba1e4cd27" />
+) | ![Similar Movies](<img width="1126" height="587" alt="Screenshot 2026-01-07 190043" src="https://github.com/user-attachments/assets/edeba59a-346a-48cc-a255-1b33558bd981" />
+<img width="1846" height="1363" alt="Screenshot 2026-01-07 182326" src="https://github.com/user-attachments/assets/b57fc120-d2cc-46e3-b53b-256c4650d34f" />
+) |
 
 ---
 
