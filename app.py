@@ -8,8 +8,10 @@ from groq import Groq
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 
-TMDB_API_KEY = ""
-GROQ_API_KEY = "" 
+# --- API KEYS ---
+# It is recommended to use secrets.toml for these in a real deployment
+TMDB_API_KEY = "6e6405f20790c821fd18d3fb0ab9df27" 
+GROQ_API_KEY = "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" 
 
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -26,6 +28,7 @@ EMOTION_TO_GENRE = {
 
 @st.cache_resource
 def load_assets():
+    # Loading models and data from Model-Files directory
     model = load_model('Model-Files/best_model.keras')
     movies = pd.DataFrame(pickle.load(open('Model-Files/movie_dict.pkl', 'rb')))
     similarity = pickle.load(open('Model-Files/similarity_matrix.pkl', 'rb'))
@@ -61,6 +64,7 @@ def get_groq_explanation(movie_title, movie_tags, emotion):
         return f"This {emotion} movie is a great match for your current mood!"
 
 def detect_and_predict(image_frame):
+    """Detects face and predicts emotion using the CNN model."""
     gray = cv2.cvtColor(image_frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.1, 3)
     roi = gray[faces[0][1]:faces[0][1]+faces[0][3], faces[0][0]:faces[0][0]+faces[0][2]] if len(faces) > 0 else gray
@@ -85,7 +89,17 @@ else:
     if st.button("⬅ Back to Menu"): st.session_state.page = 'home'; st.rerun()
 
     if st.session_state.page == 'mood':
-        img_file = st.camera_input("Capture your face to detect mood")
+        # Added tabs for Camera vs Upload
+        tab1, tab2 = st.tabs(["📸 Use Camera", "📁 Upload Image"])
+        
+        with tab1:
+            cam_file = st.camera_input("Capture your face to detect mood")
+        with tab2:
+            up_file = st.file_uploader("Choose an image from your PC", type=['jpg', 'jpeg', 'png'])
+
+        # Check which input was used
+        img_file = cam_file if cam_file else up_file
+
         if img_file:
             file_bytes = np.asarray(bytearray(img_file.read()), dtype=np.uint8)
             image = cv2.imdecode(file_bytes, 1)
@@ -118,10 +132,18 @@ else:
                     st.caption(m.title)
 
     elif st.session_state.page == 'emotion':
-        img_file = st.camera_input("Face the camera")
+        # Added tabs here as well for testing
+        tab1, tab2 = st.tabs(["📸 Use Camera", "📁 Upload Image"])
+        
+        with tab1:
+            cam_file = st.camera_input("Face the camera")
+        with tab2:
+            up_file = st.file_uploader("Upload a face image", type=['jpg', 'jpeg', 'png'])
+
+        img_file = cam_file if cam_file else up_file
+
         if img_file:
             file_bytes = np.asarray(bytearray(img_file.read()), dtype=np.uint8)
             image = cv2.imdecode(file_bytes, 1)
             mood = detect_and_predict(image)
             st.metric(label="CNN Model Prediction", value=mood.upper())
-
