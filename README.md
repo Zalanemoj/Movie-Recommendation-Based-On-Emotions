@@ -5,6 +5,7 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
 ![Groq](https://img.shields.io/badge/Groq-f5f5f5?style=for-the-badge&logo=groq&logoColor=black)
 ![TMDB](https://img.shields.io/badge/TMDB-01d277?style=for-the-badge&logo=the-movie-database&logoColor=white)
+
 ![Banner](https://github.com/user-attachments/assets/4749ae32-e2f8-4842-80fd-6af80c187c71)
 
 **CinemaAI** is an end-to-end AI application that detects your real-time mood using a custom-trained **CNN** and provides personalized movie recommendations using **Groq AI (Llama 3)** for intelligent reasoning.
@@ -21,54 +22,105 @@
 ---
 
 ## 📸 Screenshots
-<img width="1118" height="1004" alt="Screenshot 2026-01-07 185954" src="https://github.com/user-attachments/assets/329e1276-0482-4ab7-a430-a8ba679d85ba" />
 
+<img width="1118" alt="Screenshot 2026-01-07 185954" src="https://github.com/user-attachments/assets/329e1276-0482-4ab7-a430-a8ba679d85ba" />
 
 ---
 
 ## 💻 Getting Started
 
 ### 1. Prerequisites
+
 Ensure you have Python installed and get your API keys from:
 * [Groq Cloud Console](https://console.groq.com/)
 * [TMDB API](https://www.themoviedb.org/documentation/api)
 
 ### 2. Installation
-bash
+```bash
 # Clone the repository
-git clone [https://github.com/Zalanemoj/Movie-Recommendation-Based-On-Emotions.git](https://github.com/Zalanemoj/Movie-Recommendation-Based-On-Emotions.git)
+git clone https://github.com/Zalanemoj/Movie-Recommendation-Based-On-Emotions.git
+
+# Navigate to project directory
+cd Movie-Recommendation-Based-On-Emotions
 
 # Install dependencies
 pip install -r requirements.txt
+```
 
-### 3. 🛠️ 
-Project Structure
+### 3. 🛠️ Project Structure
+
 The repository is organized for clear development and easy deployment:
-* `app.py`: The main Streamlit dashboard.
-* `Model-Files/`: Contains the trained `.keras` model and similarity data.
-* `Images/`: Validation metrics and project graphics.
-* `scripts/`: Original notebooks used for model training and testing.
-
+```
 Movie-Recommendation-Based-On-Emotions/
-├── .idea/                         
-│   ├── inspectionProfiles/        
+│
+├── .idea/                                    # IDE configuration files
+│   ├── inspectionProfiles/
 │   ├── Emotion-Based-Movie-Recomender.iml
 │   ├── modules.xml
 │   └── ...
-├── Images/                        
+│
+├── Images/                                   # Validation metrics and graphics
 │   ├── Confusion-metrics-withClassWeights.png
 │   ├── Confusion-metrics-withoutClassWeights.png
 │   └── ... (sample movie posters/images)
-├── Model-Files/                    
-│   ├── best_model.keras           
-│   ├── movie_dict.pkl             
-│   └── similarity_matrix.pkl      
-├── scripts/                        
-│   ├── content-based-movie-recomender.ipynb
-│   ├── face-emotion-detection.ipynb
-│   └── test_recommend.py
-├── app.py                     
-├── requirements.txt              
-├── LICENSE                  
-├── .gitignore                 
-└── README.md                 
+│
+├── Model-Files/                              # Trained models and data
+│   ├── best_model.keras                     # Emotion detection CNN model
+│   ├── movie_dict.pkl                       # Movie metadata dictionary
+│   └── similarity_matrix.pkl                # Content-based similarity matrix
+│
+├── scripts/                                  # Training and testing notebooks
+│   ├── content-based-movie-recomender.ipynb # Movie recommendation system
+│   ├── face-emotion-detection.ipynb         # Emotion detection model training
+│   └── test_recommend.py                    # Testing script
+│
+├── app.py                                    # Main Streamlit application
+├── requirements.txt                          # Python dependencies
+├── LICENSE                                   # Project license
+├── .gitignore                               # Git ignore rules
+└── README.md                                # Project documentation
+```
+
+---
+
+## 🎯 Usage
+
+1. **Set up your API keys** in the application settings or environment variables
+2. **Run the Streamlit app**:
+```bash
+   streamlit run app.py
+```
+3. **Allow webcam access** for real-time emotion detection
+4. **Get personalized recommendations** based on your current mood!
+
+---
+
+## 🧪 Model Performance
+
+The emotion detection model was trained on facial expression datasets with the following metrics:
+
+* View confusion matrices in the `Images/` folder
+* Model architecture and training details available in `scripts/face-emotion-detection.ipynb`
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
+## 📄 License
+
+This project is licensed under MIT terms specified in the LICENSE file.
+
+---
+
+## 🙏 Acknowledgments
+
+* **Groq** for providing fast LLM inference
+* **TMDB** for comprehensive movie data
+* **TensorFlow/Keras** for deep learning framework
+* **Streamlit** for the interactive web interface
+
+---
