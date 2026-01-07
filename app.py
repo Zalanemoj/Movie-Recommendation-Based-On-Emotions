@@ -10,8 +10,8 @@ from tensorflow.keras.preprocessing.image import img_to_array
 
 # --- API KEYS ---
 # It is recommended to use secrets.toml for these in a real deployment
-TMDB_API_KEY = "6e6405f20790c821fd18d3fb0ab9df27" 
-GROQ_API_KEY = "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" 
+TMDB_API_KEY =st.secrets["TMDB_API_KEY"] 
+GROQ_API_KEY =st.secrets["GROQ_API_KEY"]
 
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -147,3 +147,4 @@ else:
             image = cv2.imdecode(file_bytes, 1)
             mood = detect_and_predict(image)
             st.metric(label="CNN Model Prediction", value=mood.upper())
+
