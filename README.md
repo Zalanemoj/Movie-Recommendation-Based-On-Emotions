@@ -20,13 +20,12 @@
 ---
 
 ## 📸 Screenshots
-
-| Emotion-Based-Movie Prediction | Movie Recommendations |
 <img width="1126" height="587" alt="Screenshot 2026-01-07 190043" src="https://github.com/user-attachments/assets/866d20d3-b421-4df4-86e1-89c5e94f9618" />
 <img width="1118" height="1004" alt="Screenshot 2026-01-07 185954" src="https://github.com/user-attachments/assets/329e1276-0482-4ab7-a430-a8ba679d85ba" />
+
+
 ## 🛠️ 
 Project Structure
-
 The repository is organized for clear development and easy deployment:
 * `app.py`: The main Streamlit dashboard.
 * `Model-Files/`: Contains the trained `.keras` model and similarity data.
