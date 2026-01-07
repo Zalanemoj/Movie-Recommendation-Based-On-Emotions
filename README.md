@@ -1,1 +1,54 @@
-# Movie-Recommendation-Based-On-Emotions
+# 🎬 CinemaAI: Emotion-Based Movie Recommender
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=tensorflow&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
+![Groq](https://img.shields.io/badge/Groq-f5f5f5?style=for-the-badge&logo=groq&logoColor=black)
+![TMDB](https://img.shields.io/badge/TMDB-01d277?style=for-the-badge&logo=the-movie-database&logoColor=white)
+
+**CinemaAI** is an end-to-end AI application that detects your real-time mood using a custom-trained **CNN** and provides personalized movie recommendations using **Groq AI (Llama 3)** for intelligent reasoning.
+
+---
+
+## 🚀 Key Features
+
+* **🎭 Mood Detection**: Real-time facial emotion recognition (Happy, Sad, Angry, etc.) via webcam.
+* **🧠 AI Explanations**: Uses **Groq Cloud** to explain exactly *why* a movie matches your detected mood.
+* **🍿 Similar Movie Search**: A content-based engine that finds movies similar to your favorites.
+* **🖼️ Dynamic Posters**: Fetches high-quality movie art directly from the **TMDB API**.
+
+---
+
+## 📸 Screenshots
+
+| Mood Detection | Movie Recommendations |
+| :---: | :---: |
+| ![Emotion Prediction](./Images/Confusion-metrics-withClassWeights.png) | ![Similar Movies](./Images/Confusion-metrics-withoutClassWeights.png) |
+*Note: You can replace these placeholders with your actual app screenshots found in the `/Images` folder.*
+
+---
+
+## 🛠️ Project Structure
+
+The repository is organized for clear development and easy deployment:
+* `app.py`: The main Streamlit dashboard.
+* `Model-Files/`: Contains the trained `.keras` model and similarity data.
+* `Images/`: Validation metrics and project graphics.
+* `scripts/`: Original notebooks used for model training and testing.
+
+---
+
+## 💻 Getting Started
+
+### 1. Prerequisites
+Ensure you have Python installed and get your API keys from:
+* [Groq Cloud Console](https://console.groq.com/)
+* [TMDB API](https://www.themoviedb.org/documentation/api)
+
+### 2. Installation
+```bash
+# Clone the repository
+git clone [https://github.com/Zalanemoj/Movie-Recommendation-Based-On-Emotions.git](https://github.com/Zalanemoj/Movie-Recommendation-Based-On-Emotions.git)
+
+# Install dependencies
+pip install -r requirements.txt
