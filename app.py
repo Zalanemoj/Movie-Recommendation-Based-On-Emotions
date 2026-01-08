@@ -39,7 +39,7 @@ def load_assets():
     and loads the Keras model and pickle files into memory.
     """
     # Replace this handle with your specific Kaggle Model path
-    model_handle = "krishnapalsinhzala13/emotion-detector"
+    model_handle = "krishnapalsinhzala13/emotion-detector/keras/default"
     
     with st.spinner("Downloading model from Kaggle Registry..."):
         # kagglehub returns the local path where the model is stored
@@ -158,3 +158,4 @@ else:
         
         if st.button("Already seen these? Suggest next 🍿"):
             st.session_state.recommend_offset += 5; st.rerun()
+
