@@ -41,7 +41,7 @@ def load_assets():
         model_dir = kagglehub.model_download(model_handle)
     
     # 2. Load the Keras model
-    model = load_model(os.path.join(model_dir, 'best_model.keras'))
+    model = load_model(os.path.join(model_dir, 'best_model (1).keras'))
     
     # 3. Load DataFrames (ensure Model-Files folder exists in repo)
     movies = pd.DataFrame(pickle.load(open('Model-Files/movie_dict.pkl', 'rb')))
@@ -242,3 +242,4 @@ else:
                 st.markdown("### 💡 AI Wellness Tips")
                 with st.spinner("Generating tips..."):
                     st.info(get_mood_tips(mood))
+
