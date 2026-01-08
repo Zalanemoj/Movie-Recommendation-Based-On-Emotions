@@ -74,7 +74,7 @@ def get_mood_tips(emotion):
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.7, max_tokens=150
+            temperature=1, max_tokens=250
         )
         return completion.choices[0].message.content
     except:
@@ -251,3 +251,4 @@ else:
                 st.markdown("### 💡 AI Wellness Tips")
                 with st.spinner("Generating tips..."):
                     st.info(get_mood_tips(mood))
+
