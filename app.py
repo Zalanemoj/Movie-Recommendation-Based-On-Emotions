@@ -10,7 +10,6 @@ from groq import Groq
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 
-# --- 1. CONFIGURATION & SECRETS ---
 TMDB_API_KEY = st.secrets["TMDB_API_KEY"]
 GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 
@@ -30,7 +29,6 @@ EMOTION_TO_GENRE = {
     'disgust': ['Family', 'Animation']
 }
 
-# --- 2. ASSET LOADING ---
 @st.cache_resource
 def load_assets():
     model_handle = "krishnapalsinhzala13/emotion-detector/keras/default"
@@ -46,7 +44,6 @@ def load_assets():
 
 model, movies, similarity, face_cascade = load_assets()
 
-# --- 3. HELPER FUNCTIONS ---
 def fetch_poster(movie_id):
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={TMDB_API_KEY}&language=en-US"
     try:
@@ -90,23 +87,19 @@ def detect_and_predict(image_frame):
     preds = model.predict(roi, verbose=0)
     return EMOTIONS[np.argmax(preds)]
 
-# --- 4. STATE MANAGEMENT ---
-# Initialize session state variables if they don't exist
 if 'page' not in st.session_state: st.session_state.page = 'home'
 
-# State for Movie Recommender
 if 'movie_offset' not in st.session_state: st.session_state.movie_offset = 0
 if 'show_movie_recs' not in st.session_state: st.session_state.show_movie_recs = False
 if 'last_selected_movie' not in st.session_state: st.session_state.last_selected_movie = ""
-
-# State for Mood Recommender
+    
 if 'mood_offset' not in st.session_state: st.session_state.mood_offset = 0
 if 'last_img_bytes' not in st.session_state: st.session_state.last_img_bytes = None
 
 st.set_page_config(page_title="CinemaAI", layout="wide")
 st.title("🎬 CinemaAI: Personalized Recommender")
 
-# --- 5. NAVIGATION ---
+
 if st.session_state.page == 'home':
     st.subheader("Welcome to your Personalized Cinema Experience!")
     st.markdown("""
@@ -122,7 +115,6 @@ if st.session_state.page == 'home':
 
 else:
     if st.sidebar.button("⬅ Back to Menu"):
-        # Reset states when going back
         st.session_state.show_movie_recs = False
         st.session_state.movie_offset = 0
         st.session_state.mood_offset = 0
@@ -130,7 +122,6 @@ else:
         st.session_state.page = 'home'
         st.rerun()
 
-    # --- MODE 1: MOOD-BASED MOVIE ---
     if st.session_state.page == 'mood_movie':
         st.header("Movie Recommendations Based on Your Emotion")
         
@@ -141,26 +132,21 @@ else:
         img_file = cam_file if cam_file else up_file
 
         if img_file:
-            # Convert file to bytes to check if it's a new image
             file_bytes_obj = img_file.getvalue()
             
-            # If image changed, reset offset to 0
             if st.session_state.last_img_bytes != file_bytes_obj:
                 st.session_state.last_img_bytes = file_bytes_obj
                 st.session_state.mood_offset = 0
 
-            # Decode and Predict
             file_bytes = np.asarray(bytearray(file_bytes_obj), dtype=np.uint8)
             image = cv2.imdecode(file_bytes, 1)
             mood = detect_and_predict(image)
             st.success(f"Detected Mood: **{mood.upper()}**")
             
-            # Get ALL recommendations (sorted by popularity), not just head(5)
             target_genres = EMOTION_TO_GENRE.get(mood, [])
             mask = movies['genres'].apply(lambda x: any(g in x for g in target_genres))
             all_recs = movies[mask].sort_values(by='popularity', ascending=False)
             
-            # Pagination Logic
             start = st.session_state.mood_offset
             end = start + 5
             batch_recs = all_recs.iloc[start:end]
@@ -178,38 +164,30 @@ else:
                             st.write(get_groq_explanation(row.title, row.tags, mood))
                     st.divider()
 
-                # Next Button
                 if st.button("Already seen these? Show Next 5 ➡️", key="next_mood_btn"):
                     st.session_state.mood_offset += 5
                     st.rerun()
 
-    # --- MODE 2: ONLY MOVIE RECOMMENDER ---
     elif st.session_state.page == 'only_movie':
         st.header("Similar Movie Recommender")
         
         selected = st.selectbox("Pick a movie you liked:", movies['title'].values)
         
-        # Reset if user picks a completely new movie from dropdown
         if selected != st.session_state.last_selected_movie:
             st.session_state.show_movie_recs = False
             st.session_state.movie_offset = 0
             st.session_state.last_selected_movie = selected
 
-        # When "Get Recommendations" is clicked, we LOCK the state to True
         if st.button("Get Recommendations"):
             st.session_state.show_movie_recs = True
-            st.session_state.movie_offset = 0  # Start from beginning
-        
-        # Only show if the state is True
+            st.session_state.movie_offset = 0 
+
         if st.session_state.show_movie_recs:
             idx = movies[movies['title'] == selected].index[0]
             distances = sorted(list(enumerate(similarity[idx])), reverse=True, key=lambda x: x[1])
-            
-            # Pagination Logic
+
             start = st.session_state.movie_offset
-            # Skip index 0 because it's the movie itself
-            # If offset is 0, we want 1:6. If offset is 5, we want 6:11.
-            # Logic: start index is 1 + offset.
+
             slice_start = 1 + start
             slice_end = slice_start + 5
             
@@ -224,12 +202,9 @@ else:
             
             st.divider()
             
-            # Next Button
             if st.button("Already seen these? Show Next 5 ➡️", key="next_movie_btn"):
                 st.session_state.movie_offset += 5
                 st.rerun()
-
-    # --- MODE 3: ONLY EMOTION DETECTION ---
     elif st.session_state.page == 'only_emotion':
         st.header("Emotion Detection & AI Tips")
         
@@ -251,4 +226,5 @@ else:
                 st.markdown("### 💡 AI Wellness Tips")
                 with st.spinner("Generating tips..."):
                     st.info(get_mood_tips(mood))
+
 
