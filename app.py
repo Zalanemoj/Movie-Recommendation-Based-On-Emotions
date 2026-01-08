@@ -11,7 +11,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 
 # --- STEP 1: AUTHENTICATION & SECRETS ---
-# Streamlit Cloud reads these from your 'Secrets' settings.
+# Ensure these match the names in your Streamlit Cloud Secrets exactly.
 TMDB_API_KEY = st.secrets["TMDB_API_KEY"] 
 GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 os.environ['KAGGLE_USERNAME'] = st.secrets["KAGGLE_USERNAME"]
@@ -37,22 +37,31 @@ def load_assets():
     """
     Downloads model from Kaggle Registry and loads pickles from the local repo.
     """
-    # 1. Download the model from Kaggle
-    # Using your specific Kaggle Model path
+    # Double-check this handle on your Kaggle Model page. 
+    # It must have 4 parts: [username]/[model-slug]/[framework]/[variation]
     model_handle = "krishnapalsinhzala13/emotion-detector/keras/default"
     
-    with st.spinner("Downloading model from Kaggle Registry..."):
-        # kagglehub returns the path to the downloaded model folder
-        model_dir = kagglehub.model_download(model_handle)
-    
-    # 2. Load the model from the Kaggle download directory
-    # This ignores any model file in your GitHub repo
-    model = load_model(os.path.join(model_dir, 'best_model.keras'))
+    try:
+        with st.spinner("Downloading model from Kaggle Registry..."):
+            # This fetches the model folder from Kaggle
+            model_dir = kagglehub.model_download(model_handle)
+        
+        # Load the model from the Kaggle download directory
+        # This will load 'best_model.keras' from the downloaded Kaggle folder
+        model = load_model(os.path.join(model_dir, 'best_model.keras'))
+        
+    except Exception as e:
+        st.error(f"Error downloading or loading Kaggle model: {e}")
+        st.stop()
     
     # 3. Load pickle data files directly from your GitHub repo folder
-    # These are located in 'Model-Files/' within your repository
-    movies = pd.DataFrame(pickle.load(open('Model-Files/movie_dict.pkl', 'rb')))
-    similarity = pickle.load(open('Model-Files/similarity_matrix.pkl', 'rb'))
+    # These are loaded from the 'Model-Files' directory in your repository
+    try:
+        movies = pd.DataFrame(pickle.load(open('Model-Files/movie_dict.pkl', 'rb')))
+        similarity = pickle.load(open('Model-Files/similarity_matrix.pkl', 'rb'))
+    except FileNotFoundError as e:
+        st.error(f"Could not find data files in GitHub repo: {e}")
+        st.stop()
     
     # Load OpenCV's face detector
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
