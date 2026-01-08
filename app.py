@@ -38,7 +38,7 @@ def load_assets():
         model_dir = kagglehub.model_download(model_handle)
     
     # Load model from Kaggle
-    model = load_model(os.path.join(model_dir, 'best_model.keras'))
+    model = load_model(os.path.join(model_dir, 'best_model (1).keras'))
     
     # Load data from local GitHub repo
     movies = pd.DataFrame(pickle.load(open('Model-Files/movie_dict.pkl', 'rb')))
@@ -171,3 +171,4 @@ else:
         if st.button("Already seen these? Suggest next 🍿"):
             st.session_state.recommend_offset += 5
             st.rerun()
+
