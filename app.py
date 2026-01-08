@@ -108,7 +108,7 @@ else:
             
             target_genres = EMOTION_TO_GENRE.get(mood, [])
             mask = movies['genres'].apply(lambda x: any(g in x for g in target_genres))
-            recs = movies[mask].sort_values(by='popularity', ascending=False).head(3)
+            recs = movies[mask].sort_values(by='popularity', ascending=False).head(5)
             
             for row in recs.itertuples():
                 c1, c2 = st.columns([1, 3])
