@@ -48,7 +48,7 @@ def load_assets():
         
         # Load the model from the Kaggle download directory
         # This will load 'best_model.keras' from the downloaded Kaggle folder
-        model = load_model(os.path.join(model_dir, '*.keras'))
+        model = load_model(os.path.join(model_dir, 'best_model (1).keras'))
         
     except Exception as e:
         st.error(f"Error downloading or loading Kaggle model: {e}")
@@ -165,4 +165,5 @@ else:
         
         if st.button("Already seen these? Suggest next 🍿"):
             st.session_state.recommend_offset += 5; st.rerun()
+
 
