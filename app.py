@@ -103,15 +103,15 @@ st.title("🎬 CinemaAI: Personalized Recommender")
 if st.session_state.page == 'home':
     st.subheader("Welcome to your Personalized Cinema Experience!")
     st.markdown("""
-    ### 🌟 How to use this App:
-    1. **🎭 Mood-Based Movie**: We scan your face to detect emotion and suggest movies. **Click 'Show Next' to see more options.**
-    2. **🍿 Only Movie Recommender**: Select a movie you love. We'll show similar ones. **Pagination is now fixed!**
-    3. **🧠 Only Emotion Detection**: Detect your mood and get AI wellness tips.
+    ### How to use this App:
+    1. ** Mood-Based Movie**: We scan your face to detect emotion and suggest movies. **Click 'Show Next' to see more options.**
+    2. ** Only Movie Recommender**: Select a movie you love. We'll show similar ones. **Pagination is now fixed!**
+    3. ** Only Emotion Detection**: Detect your mood and get AI wellness tips.
     """)
     col1, col2, col3 = st.columns(3)
-    if col1.button("🎭 Mood-Based Movie", use_container_width=True): st.session_state.page = 'mood_movie'; st.rerun()
-    if col2.button("🍿 Only Movie Recommender", use_container_width=True): st.session_state.page = 'only_movie'; st.rerun()
-    if col3.button("🧠 Only Emotion Detection", use_container_width=True): st.session_state.page = 'only_emotion'; st.rerun()
+    if col1.button(" Mood-Based Movie", use_container_width=True): st.session_state.page = 'mood_movie'; st.rerun()
+    if col2.button(" Only Movie Recommender", use_container_width=True): st.session_state.page = 'only_movie'; st.rerun()
+    if col3.button(" Only Emotion Detection", use_container_width=True): st.session_state.page = 'only_emotion'; st.rerun()
 
 else:
     if st.sidebar.button("⬅ Back to Menu"):
@@ -125,7 +125,7 @@ else:
     if st.session_state.page == 'mood_movie':
         st.header("Movie Recommendations Based on Your Emotion")
         
-        tab1, tab2 = st.tabs(["📸 Use Camera", "📁 Upload Image"])
+        tab1, tab2 = st.tabs([" Use Camera", " Upload Image"])
         with tab1: cam_file = st.camera_input("Capture face")
         with tab2: up_file = st.file_uploader("Upload image", type=['jpg', 'png', 'jpeg'])
         
@@ -208,7 +208,7 @@ else:
     elif st.session_state.page == 'only_emotion':
         st.header("Emotion Detection & AI Tips")
         
-        tab1, tab2 = st.tabs(["📸 Use Camera", "📁 Upload Image"])
+        tab1, tab2 = st.tabs([" Use Camera", " Upload Image"])
         with tab1: cam_file = st.camera_input("Capture face for analysis")
         with tab2: up_file = st.file_uploader("Upload face image", type=['jpg', 'png', 'jpeg'])
         
@@ -223,8 +223,9 @@ else:
             with c1: st.image(image, channels="BGR", caption="Input Image", width=300)
             with c2:
                 st.metric(label="Predicted Mood", value=mood.upper())
-                st.markdown("### 💡 AI Wellness Tips")
+                st.markdown("### AI Wellness Tips")
                 with st.spinner("Generating tips..."):
                     st.info(get_mood_tips(mood))
+
 
 
