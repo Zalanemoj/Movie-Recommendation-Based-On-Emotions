@@ -84,8 +84,27 @@ def detect_and_predict(image_frame):
     roi = cv2.resize(roi, (48, 48))
     roi = roi.astype('float') / 255.0
     roi = np.expand_dims(img_to_array(roi), axis=0)
-    preds = model.predict(roi, verbose=0)
-    return EMOTIONS[np.argmax(preds)]
+    preds = model.predict(roi, verbose=0)[0]
+    emotion = EMOTIONS[np.argmax(preds)]
+    emotion_confidence = float(np.max(preds)) * 100  # confidence % of detected emotion
+    all_scores = {EMOTIONS[i]: round(float(preds[i]) * 100, 1) for i in range(len(EMOTIONS))}
+    return emotion, emotion_confidence, all_scores
+
+def get_genre_match_confidence(movie_genres, target_genres):
+    """How well does a movie's genres match the expected emotion genres (0-100%)"""
+    if not target_genres or not movie_genres:
+        return 0.0
+    matched = sum(1 for g in target_genres if g in movie_genres)
+    return round((matched / len(target_genres)) * 100, 1)
+
+def confidence_badge(score):
+    """Return colored label based on confidence score"""
+    if score >= 70:
+        return "🟢 High Match"
+    elif score >= 40:
+        return "🟡 Medium Match"
+    else:
+        return "🔴 Low Match"
 
 if 'page' not in st.session_state: st.session_state.page = 'home'
 
@@ -140,9 +159,21 @@ else:
 
             file_bytes = np.asarray(bytearray(file_bytes_obj), dtype=np.uint8)
             image = cv2.imdecode(file_bytes, 1)
-            mood = detect_and_predict(image)
+            mood, emotion_conf, all_scores = detect_and_predict(image)
+
+            # --- Emotion Confidence Display ---
             st.success(f"Detected Mood: **{mood.upper()}**")
-            
+
+            col_conf, col_bar = st.columns([1, 2])
+            with col_conf:
+                st.metric(label="🎭 Emotion Confidence", value=f"{emotion_conf:.1f}%")
+            with col_bar:
+                st.markdown("**All Emotion Scores:**")
+                for emo, score in sorted(all_scores.items(), key=lambda x: -x[1]):
+                    st.progress(int(score), text=f"{emo.capitalize()}: {score}%")
+
+            st.divider()
+
             target_genres = EMOTION_TO_GENRE.get(mood, [])
             mask = movies['genres'].apply(lambda x: any(g in x for g in target_genres))
             all_recs = movies[mask].sort_values(by='popularity', ascending=False)
@@ -157,9 +188,17 @@ else:
                 st.subheader(f"Movies for a {mood} day (Showing {start+1}-{end}):")
                 for row in batch_recs.itertuples():
                     c1, c2 = st.columns([1, 4])
-                    with c1: st.image(fetch_poster(row.movie_id))
+                    with c1:
+                        st.image(fetch_poster(row.movie_id))
                     with c2:
                         st.subheader(row.title)
+
+                        # --- Movie-Emotion Match Confidence ---
+                        match_conf = get_genre_match_confidence(row.genres, target_genres)
+                        badge = confidence_badge(match_conf)
+                        st.markdown(f"**Emotion Match:** {badge} `{match_conf}%`")
+                        st.progress(int(match_conf), text=f"Genre overlap with '{mood}' mood")
+
                         with st.spinner("AI is thinking..."):
                             st.write(get_groq_explanation(row.title, row.tags, mood))
                     st.divider()
@@ -197,8 +236,12 @@ else:
             for i, dist in enumerate(current_batch):
                 with cols[i]:
                     m = movies.iloc[dist[0]]
+                    similarity_score = round(dist[1] * 100, 1)
+                    badge = confidence_badge(similarity_score)
                     st.image(fetch_poster(m.movie_id))
                     st.caption(m.title)
+                    st.progress(int(similarity_score), text=f"{similarity_score}%")
+                    st.markdown(f"<center>{badge}</center>", unsafe_allow_html=True)
             
             st.divider()
             
@@ -217,15 +260,16 @@ else:
         if img_file:
             file_bytes = np.asarray(bytearray(img_file.read()), dtype=np.uint8)
             image = cv2.imdecode(file_bytes, 1)
-            mood = detect_and_predict(image)
+            mood, emotion_conf, all_scores = detect_and_predict(image)
             
             c1, c2 = st.columns([1, 2])
             with c1: st.image(image, channels="BGR", caption="Input Image", width=300)
             with c2:
-                st.metric(label="Predicted Mood", value=mood.upper())
+                st.metric(label="Predicted Mood", value=mood.upper(), delta=f"{emotion_conf:.1f}% confident")
+                st.markdown("**All Emotion Probabilities:**")
+                for emo, score in sorted(all_scores.items(), key=lambda x: -x[1]):
+                    st.progress(int(score), text=f"{emo.capitalize()}: {score}%")
                 st.markdown("### AI Wellness Tips")
                 with st.spinner("Generating tips..."):
                     st.info(get_mood_tips(mood))
-
-
 
