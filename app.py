@@ -199,6 +199,18 @@ else:
                         st.markdown(f"**Emotion Match:** {badge} `{match_conf}%`")
                         st.progress(int(match_conf), text=f"Genre overlap with '{mood}' mood")
 
+                        # Show genres
+                        matched = [g for g in target_genres if g in row.genres]
+                        unmatched = [g for g in target_genres if g not in row.genres]
+                        st.markdown(
+                            f"🎯 **Target Genres** *(for {mood})*: "
+                            + " ".join([f"`{g}`" for g in target_genres])
+                        )
+                        st.markdown(
+                            f"🎬 **Movie Genres**: "
+                            + " ".join([f"✅ `{g}`" if g in matched else f"`{g}`" for g in row.genres])
+                        )
+
                         with st.spinner("AI is thinking..."):
                             st.write(get_groq_explanation(row.title, row.tags, mood))
                     st.divider()
@@ -272,4 +284,3 @@ else:
                 st.markdown("### AI Wellness Tips")
                 with st.spinner("Generating tips..."):
                     st.info(get_mood_tips(mood))
-
